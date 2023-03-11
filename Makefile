@@ -10,3 +10,5 @@ publish:
 	poetry publish --build
 package-install:
 	pip install --user dist/*.whl
+coverage:
+	poetry run pytest --cov=app_scripts --cov-report xml
