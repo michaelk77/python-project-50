@@ -11,4 +11,4 @@ publish:
 package-install:
 	pip install --user dist/*.whl
 coverage:
-	poetry run pytest --cov=app_scripts --cov-report xml
+	poetry run pytest --cov=tests/ --cov-report xml
