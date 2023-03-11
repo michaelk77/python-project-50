@@ -10,10 +10,8 @@ def main():
 
     args = parser.parse_args()
 
-    print(args.first_file)
-    print(args.second_file)
-    print(args.format)
-
+    if ".json" in args.first_file and ".json" in args.second_file:
+        print(generate_diff(args.first_file, args.second_file))
     # TODO: Implement file comparison logic here
 
 
