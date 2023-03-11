@@ -1,5 +1,6 @@
 import argparse
 import json
+import yaml
 
 
 def main():
@@ -9,22 +10,25 @@ def main():
     parser.add_argument('-f', '--format', help='set format of output')
 
     args = parser.parse_args()
-
-    if ".json" in args.first_file and ".json" in args.second_file:
-        print(generate_diff(args.first_file, args.second_file))
-    # TODO: Implement file comparison logic here
+    print(generate_diff(args.first_file, args.second_file))
 
 
-def generate_diff(filepath1, filepath2):
-    data1 = read_file(filepath1)
-    data2 = read_file(filepath2)
-    diff = get_diff(data1, data2)
-    return format_diff(diff)
+def generate_diff(file1, file2):
+    extension = file1.split(".")[-1]
+    if extension == 'json':
+        with open(file1, 'r') as f1, open(file2, 'r') as f2:
+            data1 = json.load(f1)
+            data2 = json.load(f2)
+        return get_diff(data1, data2)
 
+    elif extension == 'yaml':
+        with open(file1, 'r') as f1, open(file2, 'r') as f2:
+            data1 = yaml.safe_load(f1.read())
+            data2 = yaml.safe_load(f2.read())
+        return get_diff(data1, data2)
 
-def read_file(filepath):
-    with open(filepath, 'r') as f:
-        return json.load(f)
+    else:
+        print(f"{extension} files are not supported.")
 
 
 def get_diff(data1, data2):
@@ -64,7 +68,7 @@ def get_diff(data1, data2):
             'value': data1[key],
         })
 
-    return diff
+    return format_diff(diff)
 
 
 def format_diff(diff):

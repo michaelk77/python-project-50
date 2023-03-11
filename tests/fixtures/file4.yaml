@@ -1,0 +1,6 @@
+bar: 42
+baz: spam
+eggs:
+  - 1
+  - 2
+  - 3

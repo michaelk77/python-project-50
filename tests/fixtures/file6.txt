@@ -1,0 +1,7 @@
+{
+  - bar: 42
+  + bar: 13
+    baz: spam
+    eggs: [1, 2, 3]
+  + qux: ham
+}
