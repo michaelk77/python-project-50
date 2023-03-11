@@ -5,12 +5,18 @@ description = ""
 authors = ["michael <catcat2005@inbox.ru>"]
 readme = "README.md"
 packages = [
-  { include = "app_scripts" },
+    { include = "app_scripts" },
 ]
 
 [tool.poetry.dependencies]
 python = "^3.10"
+pytest = "^7.2.2"
 
+
+
+
+[tool.poetry.group.dev.dependencies]
+flake8 = "^6.0.0"
 
 [build-system]
 requires = ["poetry-core"]

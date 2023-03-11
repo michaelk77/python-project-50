@@ -77,14 +77,14 @@ def format_diff(diff):
         new_value = item.get('new_value')
 
         if type_ == 'added':
-            lines.append(f'+ {key}: {format_value(value)}')
+            lines.append(f'  + {key}: {format_value(value)}')
         elif type_ == 'removed':
-            lines.append(f'- {key}: {format_value(value)}')
+            lines.append(f'  - {key}: {format_value(value)}')
         elif type_ == 'modified':
-            lines.append(f'- {key}: {format_value(old_value)}')
-            lines.append(f'+ {key}: {format_value(new_value)}')
+            lines.append(f'  - {key}: {format_value(old_value)}')
+            lines.append(f'  + {key}: {format_value(new_value)}')
         else:
-            lines.append(f'  {key}: {format_value(value)}')
+            lines.append(f'    {key}: {format_value(value)}')
 
     return '{\n' + '\n'.join(lines) + '\n}'
 
