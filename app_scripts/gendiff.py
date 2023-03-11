@@ -2,11 +2,16 @@ import argparse
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        description='Compares two configuration files and shows a difference.')
-    parser.add_argument('first_file', type=str, help='path to the first file')
-    parser.add_argument('second_file', type=str, help='path to the second file')
+    parser = argparse.ArgumentParser(description='Generate diff')
+    parser.add_argument('first_file', help='Path to the first file')
+    parser.add_argument('second_file', help='Path to the second file')
+    parser.add_argument('-f', '--format', help='set format of output')
+
     args = parser.parse_args()
+
+    print(args.first_file)
+    print(args.second_file)
+    print(args.format)
 
     # TODO: Implement file comparison logic here
 
