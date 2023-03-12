@@ -19,87 +19,119 @@ def generate_diff(file1, file2):
         with open(file1, 'r') as f1, open(file2, 'r') as f2:
             data1 = json.load(f1)
             data2 = json.load(f2)
-        return get_diff(data1, data2)
+        return stylish(get_diff(data1, data2))
 
     elif extension == 'yaml':
         with open(file1, 'r') as f1, open(file2, 'r') as f2:
             data1 = yaml.safe_load(f1.read())
             data2 = yaml.safe_load(f2.read())
-        return get_diff(data1, data2)
+        return stylish(get_diff(data1, data2))
 
     else:
         print(f"{extension} files are not supported.")
 
 
-def get_diff(data1, data2):
-    keys1 = set(data1.keys())
-    keys2 = set(data2.keys())
-    common_keys = keys1 & keys2
-    added_keys = keys2 - keys1
-    removed_keys = keys1 - keys2
+def get_diff(dict1, dict2):
+    diff = {}
 
-    diff = []
-    for key in sorted(common_keys):
-        if data1[key] != data2[key]:
-            diff.append({
-                'key': key,
-                'type': 'modified',
-                'old_value': data1[key],
-                'new_value': data2[key],
-            })
+    # Iterate over keys in first dict
+    for key in dict1:
+        if key not in dict2:
+            diff[key] = {"status": "removed", "old_value": dict1[key]}
+        elif dict1[key] != dict2[key]:
+            if isinstance(dict1[key], dict) and isinstance(dict2[key], dict):
+                # Recursively compare nested dictionaries
+                nested_diff = get_diff(dict1[key], dict2[key])
+                if nested_diff:
+                    diff[key] = nested_diff
+            else:
+                diff[key] = {"status": "modified", "old_value": dict1[key],
+                             "new_value": dict2[key]}
         else:
-            diff.append({
-                'key': key,
-                'type': 'unchanged',
-                'value': data1[key],
-            })
+            diff[key] = {"status": "not changed", "data": dict1[key]}
 
-    for key in sorted(added_keys):
-        diff.append({
-            'key': key,
-            'type': 'added',
-            'value': data2[key],
-        })
+    # Iterate over keys in second dict
+    for key in dict2:
+        if key not in dict1:
+            diff[key] = {"status": "added", "new_value": dict2[key]}
 
-    for key in sorted(removed_keys):
-        diff.append({
-            'key': key,
-            'type': 'removed',
-            'value': data1[key],
-        })
-
-    return format_diff(diff)
+    return diff
 
 
-def format_diff(diff):
-    lines = []
-    for item in sorted(diff, key=lambda x: x['key']):
-        key = item['key']
-        type_ = item['type']
-        value = item.get('value')
-        old_value = item.get('old_value')
-        new_value = item.get('new_value')
-
-        if type_ == 'added':
-            lines.append(f'  + {key}: {format_value(value)}')
-        elif type_ == 'removed':
-            lines.append(f'  - {key}: {format_value(value)}')
-        elif type_ == 'modified':
-            lines.append(f'  - {key}: {format_value(old_value)}')
-            lines.append(f'  + {key}: {format_value(new_value)}')
+def stylish(diff, depth=1):
+    "convert only dict to stylish format"
+    ans = ''
+    for i in sorted(diff):
+        gap = ('    ' * depth)
+        gap2 = gap[2:]
+        if isinstance(diff[i], dict) and "status" not in diff[i]:
+            ans += f"{gap}{i}: {{\n"
+            ans += stringify(stylish(diff[i], depth + 1), depth)
+            ans += f"\n{gap}}}\n"
+        elif diff[i]['status'] == 'added':
+            if diff[i]['new_value'] != "":
+                ans += f"{gap2}+ {i}: {stringify(diff[i]['new_value'], depth)}\n"
+            else:
+                ans += f"{gap2}+ {i}:\n"
+        elif diff[i]['status'] == 'removed':
+            if diff[i]['old_value'] != "":
+                ans += f"{gap2}- {i}: {stringify(diff[i]['old_value'], depth)}\n"
+            else:
+                ans += f"{gap2}- {i}:\n"
+        elif diff[i]['status'] == 'modified':
+            if diff[i]['old_value'] != "":
+                ans += f"{gap2}- {i}: {stringify(diff[i]['old_value'], depth)}\n"
+            else:
+                ans += f"{gap2}- {i}:\n"
+            if diff[i]['new_value'] != "":
+                ans += f"{gap2}+ {i}: {stringify(diff[i]['new_value'], depth)}\n"
+            else:
+                ans += f"{gap2}+ {i}:\n"
+        elif diff[i]['status'] == 'not changed':
+            ans += f"{gap}{i}: {stringify(diff[i]['data'], depth)}\n"
         else:
-            lines.append(f'    {key}: {format_value(value)}')
+            ans += f"{gap}{i}: {stringify(diff[i]['data'], depth)}\n"
+    if ans[-1:] == "\n":
+        ans = ans[:-1]
+    if depth == 1:
+        return f"{{\n" + ans + f"\n}}"
+    return ans
 
-    return '{\n' + '\n'.join(lines) + '\n}'
 
-
-def format_value(value):
-    if isinstance(value, bool):
-        return str(value).lower()
-    elif value is None:
-        return 'null'
+def stringify(raw_value, depth):
+    if isinstance(raw_value, dict):
+        normalized_value = f"{{\n"
+        normalized_value += get_tree(raw_value, depth + 1)
+        normalized_value += f"{depth * '    '}}}"
+    elif isinstance(raw_value, tuple):
+        normalized_value = (stringify(raw_value[0], depth),
+                            stringify(raw_value[1], depth))
     else:
-        return value
+        normalized_value = fix(raw_value)
+    return normalized_value
+
+
+def get_tree(value, depth=0):
+    tree = ""
+    for nested_key, nested_value in value.items():
+        if isinstance(nested_value, dict):
+            tree += f"{depth * '    '}{nested_key}: {{\n"
+            tree += f"{get_tree(nested_value, depth + 1)}"
+            tree += f"{depth * '    '}}}\n"
+        else:
+            nested_value = json.dumps(nested_value).strip('"')
+            tree += f"{depth * '    '}{nested_key}: {fix(nested_value)}\n"
+    return tree
+
+
+def fix(value):
+    if value is None:
+        return "null"
+    if value is True:
+        return "true"
+    if value is False:
+        return "false"
+    return value
 
 
 if __name__ == '__main__':
