@@ -5,7 +5,7 @@ description = ""
 authors = ["michael <catcat2005@inbox.ru>"]
 readme = "README.md"
 packages = [
-    { include = "app_scripts" },
+    { include = "gendiff" },
 ]
 
 [tool.poetry.dependencies]
@@ -25,4 +25,4 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
-gendiff = "app_scripts.gendiff:main"
+gendiff = "gendiff.generate_diff:main"

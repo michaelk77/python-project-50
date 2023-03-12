@@ -1,9 +1,9 @@
 import argparse
 import json
 import yaml
-from app_scripts.formatting.stylish import stylish
-from app_scripts.formatting.plain import plain
-from app_scripts.formatting.json import format_json
+from gendiff.formatting.stylish import stylish
+from gendiff.formatting.plain import plain
+from gendiff.formatting.json import format_json
 
 all_formatters = {
     "stylish": stylish,

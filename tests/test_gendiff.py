@@ -1,5 +1,5 @@
 import pytest
-from app_scripts.gendiff import generate_diff
+from gendiff.generate_diff import generate_diff
 
 test_data = [("tests/fixtures/file1.json", "tests/fixtures/file2.json",
               "tests/fixtures/file3.txt", "stylish"), (
