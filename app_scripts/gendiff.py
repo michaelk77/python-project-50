@@ -14,18 +14,19 @@ def main():
 
 
 def generate_diff(file1, file2):
+    formatter = stylish
     extension = file1.split(".")[-1]
     if extension == 'json':
         with open(file1, 'r') as f1, open(file2, 'r') as f2:
             data1 = json.load(f1)
             data2 = json.load(f2)
-        return stylish(get_diff(data1, data2))
+        return formatter(get_diff(data1, data2))
 
     elif extension == 'yaml':
         with open(file1, 'r') as f1, open(file2, 'r') as f2:
             data1 = yaml.safe_load(f1.read())
             data2 = yaml.safe_load(f2.read())
-        return stylish(get_diff(data1, data2))
+        return formatter(get_diff(data1, data2))
 
     else:
         print(f"{extension} files are not supported.")
