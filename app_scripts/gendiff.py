@@ -71,21 +71,25 @@ def stylish(diff, depth=1):
             ans += f"\n{gap}}}\n"
         elif diff[i]['status'] == 'added':
             if diff[i]['new_value'] != "":
-                ans += f"{gap2}+ {i}: {stringify(diff[i]['new_value'], depth)}\n"
+                ans += f"{gap2}+ {i}: " \
+                       f"{stringify(diff[i]['new_value'], depth)}\n"
             else:
                 ans += f"{gap2}+ {i}:\n"
         elif diff[i]['status'] == 'removed':
             if diff[i]['old_value'] != "":
-                ans += f"{gap2}- {i}: {stringify(diff[i]['old_value'], depth)}\n"
+                ans += f"{gap2}- {i}:" \
+                       f" {stringify(diff[i]['old_value'], depth)}\n"
             else:
                 ans += f"{gap2}- {i}:\n"
         elif diff[i]['status'] == 'modified':
             if diff[i]['old_value'] != "":
-                ans += f"{gap2}- {i}: {stringify(diff[i]['old_value'], depth)}\n"
+                ans += f"{gap2}- {i}:" \
+                       f" {stringify(diff[i]['old_value'], depth)}\n"
             else:
                 ans += f"{gap2}- {i}:\n"
             if diff[i]['new_value'] != "":
-                ans += f"{gap2}+ {i}: {stringify(diff[i]['new_value'], depth)}\n"
+                ans += f"{gap2}+ {i}:" \
+                       f" {stringify(diff[i]['new_value'], depth)}\n"
             else:
                 ans += f"{gap2}+ {i}:\n"
         elif diff[i]['status'] == 'not changed':
@@ -95,13 +99,13 @@ def stylish(diff, depth=1):
     if ans[-1:] == "\n":
         ans = ans[:-1]
     if depth == 1:
-        return f"{{\n" + ans + f"\n}}"
+        return "{\n" + ans + "\n}"
     return ans
 
 
 def stringify(raw_value, depth):
     if isinstance(raw_value, dict):
-        normalized_value = f"{{\n"
+        normalized_value = "{\n"
         normalized_value += get_tree(raw_value, depth + 1)
         normalized_value += f"{depth * '    '}}}"
     elif isinstance(raw_value, tuple):
