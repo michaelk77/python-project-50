@@ -3,10 +3,12 @@ import json
 import yaml
 from app_scripts.formatting.stylish import stylish
 from app_scripts.formatting.plain import plain
+from app_scripts.formatting.json import format_json
 
 all_formatters = {
     "stylish": stylish,
-    "plain": plain
+    "plain": plain,
+    "json": format_json
 }
 
 
@@ -14,7 +16,7 @@ def main():
     parser = argparse.ArgumentParser(description='Generate diff')
     parser.add_argument('first_file', help='Path to the first file')
     parser.add_argument('second_file', help='Path to the second file')
-    parser.add_argument('-f', '--format', choices=["stylish", "plain"],
+    parser.add_argument('-f', '--format', choices=["stylish", "plain", "json"],
                         default="stylish", help='set format of output')
 
     args = parser.parse_args()
