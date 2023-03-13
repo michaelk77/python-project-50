@@ -11,32 +11,18 @@ def stylish(diff, depth=1):
             ans += stringify(stylish(diff[i], depth + 1), depth)
             ans += f"\n{gap}}}\n"
         elif diff[i]['status'] == 'added':
-            if diff[i]['new_value'] != "":
-                ans += f"{gap2}+ {i}: " \
-                       f"{stringify(diff[i]['new_value'], depth)}\n"
-            else:
-                ans += f"{gap2}+ {i}:\n"
+            ans += auto_space(gap2, i, stringify(diff[i]['new_value'], depth),
+                              "+ ")
         elif diff[i]['status'] == 'removed':
-            if diff[i]['old_value'] != "":
-                ans += f"{gap2}- {i}:" \
-                       f" {stringify(diff[i]['old_value'], depth)}\n"
-            else:
-                ans += f"{gap2}- {i}:\n"
+            ans += auto_space(gap2, i, stringify(diff[i]['old_value'], depth),
+                              "- ")
         elif diff[i]['status'] == 'modified':
-            if diff[i]['old_value'] != "":
-                ans += f"{gap2}- {i}:" \
-                       f" {stringify(diff[i]['old_value'], depth)}\n"
-            else:
-                ans += f"{gap2}- {i}:\n"
-            if diff[i]['new_value'] != "":
-                ans += f"{gap2}+ {i}:" \
-                       f" {stringify(diff[i]['new_value'], depth)}\n"
-            else:
-                ans += f"{gap2}+ {i}:\n"
+            ans += auto_space(gap2, i, stringify(diff[i]['old_value'], depth),
+                              "- ")
+            ans += auto_space(gap2, i, stringify(diff[i]['new_value'], depth),
+                              "+ ")
         elif diff[i]['status'] == 'not changed':
-            ans += f"{gap}{i}: {stringify(diff[i]['data'], depth)}\n"
-        else:
-            ans += f"{gap}{i}: {stringify(diff[i]['data'], depth)}\n"
+            ans += auto_space(gap, i, stringify(diff[i]['data'], depth))
     if ans[-1:] == "\n":
         ans = ans[:-1]
     if depth == 1:
@@ -44,17 +30,23 @@ def stylish(diff, depth=1):
     return ans
 
 
+def auto_space(gap, i, value, sign=""):
+    if value != "":
+        return f"{gap}{sign}{i}: {value}\n"
+    return f"{gap}{sign}{i}:\n"
+
+
 def stringify(raw_value, depth):
     if isinstance(raw_value, dict):
-        normalized_value = "{\n"
-        normalized_value += get_tree(raw_value, depth + 1)
-        normalized_value += f"{depth * '    '}}}"
+        normalized = "{\n"
+        normalized += get_tree(raw_value, depth + 1)
+        normalized += f"{depth * '    '}}}"
     elif isinstance(raw_value, tuple):
-        normalized_value = (stringify(raw_value[0], depth),
-                            stringify(raw_value[1], depth))
+        normalized = (stringify(raw_value[0], depth),
+                      stringify(raw_value[1], depth))
     else:
-        normalized_value = fix(raw_value)
-    return normalized_value
+        normalized = fix(raw_value)
+    return normalized
 
 
 def get_tree(value, depth=0):
@@ -66,7 +58,7 @@ def get_tree(value, depth=0):
             tree += f"{depth * '    '}}}\n"
         else:
             nested_value = json.dumps(nested_value).strip('"')
-            tree += f"{depth * '    '}{nested_key}: {fix(nested_value)}\n"
+            tree += auto_space(depth * '    ', nested_key, fix(nested_value))
     return tree
 
 
