@@ -10,6 +10,11 @@
 
 [![asciicast](https://asciinema.org/a/fXZbN3RnO6mygy4SvAzWd3Ptk.svg)](https://asciinema.org/a/fXZbN3RnO6mygy4SvAzWd3Ptk)
 
+stylish standart output
 [![asciicast](https://asciinema.org/a/EhxiMiu4eieIh5J5SugBGY7K4.svg)](https://asciinema.org/a/EhxiMiu4eieIh5J5SugBGY7K4)
 
+plain standart output
 [![asciicast](https://asciinema.org/a/vSJV3SRrA2Xa0iefMMkKJmvTf.svg)](https://asciinema.org/a/vSJV3SRrA2Xa0iefMMkKJmvTf)
+
+json standart output
+[![asciicast](https://asciinema.org/a/jGtiZ1bpx0Lp7MZ9IMzFzWFRi.svg)](https://asciinema.org/a/jGtiZ1bpx0Lp7MZ9IMzFzWFRi)
