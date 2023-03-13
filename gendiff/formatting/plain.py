@@ -6,19 +6,20 @@ def plain(diff, path=""):
     formatter = ""
     if isinstance(diff, dict):
         for i in sorted(diff):
-            formatter = status_analise(diff, i, path, formatter)
+            if isinstance(diff[i], dict) and "status" not in diff[i]:
+                if path:
+                    formatter += plain(diff[i], path + "." + i) + "\n"
+                else:
+                    formatter += plain(diff[i], i) + "\n"
+            else:
+                formatter = status_analise(diff, i, path, formatter)
 
     return formatter.strip()
 
 
 def status_analise(diff, i, path, formatter):
     """Analise's status of diff and return string"""
-    if isinstance(diff[i], dict) and "status" not in diff[i]:
-        if path:
-            formatter += plain(diff[i], path + "." + i) + "\n"
-        else:
-            formatter += plain(diff[i], i) + "\n"
-    elif isinstance(diff[i], dict):
+    if isinstance(diff[i], dict):
         status = diff[i]['status']
         dot = "." if path else ""
         if status == "removed":
