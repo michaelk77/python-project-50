@@ -2,6 +2,7 @@ import json
 
 
 def plain(diff, path=""):
+    """formatting diff to plain style string"""
     formatter = ""
     if isinstance(diff, dict):
         for i in sorted(diff):
@@ -11,6 +12,7 @@ def plain(diff, path=""):
 
 
 def status_analise(diff, i, path, formatter):
+    """Analise's status of diff and return string"""
     if isinstance(diff[i], dict) and "status" not in diff[i]:
         if path:
             formatter += plain(diff[i], path + "." + i) + "\n"
@@ -35,6 +37,7 @@ def status_analise(diff, i, path, formatter):
 
 
 def stringify(raw_value):
+    """Return string from raw_value"""
     if isinstance(raw_value, dict):
         normalized = "[complex value]"
     elif isinstance(raw_value, bool) or not raw_value:

@@ -2,6 +2,7 @@ import json
 
 
 def stylish(diff, depth=1):
+    """formatting diff to stylish style string"""
     ans = ''
     for i in sorted(diff):
         gap = ('    ' * depth)
@@ -14,6 +15,7 @@ def stylish(diff, depth=1):
 
 
 def status_analise(diff, i, gap, gap2, ans, depth):
+    """Analise's status of diff and return string"""
     if isinstance(diff[i], dict) and "status" not in diff[i]:
         ans += f"{gap}{i}: {{\n"
         ans += stringify(stylish(diff[i], depth + 1), depth)
@@ -39,6 +41,7 @@ def auto_space(gap, i, value, sign=""):
 
 
 def stringify(raw_value, depth):
+    """Return string from raw_value"""
     if isinstance(raw_value, dict):
         normalized = "{\n"
         normalized += get_tree(raw_value, depth + 1)
@@ -52,6 +55,7 @@ def stringify(raw_value, depth):
 
 
 def get_tree(value, depth=0):
+    """Return string from dict in tree structure"""
     tree = ""
     for nested_key, nested_value in value.items():
         if isinstance(nested_value, dict):
@@ -65,6 +69,7 @@ def get_tree(value, depth=0):
 
 
 def fix(value):
+    """fix issue with None, True, False"""
     if value is None:
         return "null"
     if value is True:

@@ -26,6 +26,7 @@ def main():
 
 
 def generate_diff(file1, file2, format="stylish"):
+    """Generate diff between two files."""
     formatter = all_formatters[format]
     extension = file1.split(".")[-1]
     if extension == 'json':
@@ -45,29 +46,34 @@ def generate_diff(file1, file2, format="stylish"):
 
 
 def get_diff(dict1, dict2):
+    """Make a dictionary with differences between two dicts."""
     diff = {}
-
     # Iterate over keys in first dict
     for key in dict1:
-        if key not in dict2:
-            diff[key] = {"status": "removed", "old_value": dict1[key]}
-        elif dict1[key] != dict2[key]:
-            if isinstance(dict1[key], dict) and isinstance(dict2[key], dict):
-                # Recursively compare nested dictionaries
-                nested_diff = get_diff(dict1[key], dict2[key])
-                if nested_diff:
-                    diff[key] = nested_diff
-            else:
-                diff[key] = {"status": "modified", "old_value": dict1[key],
-                             "new_value": dict2[key]}
-        else:
-            diff[key] = {"status": "not changed", "data": dict1[key]}
-
+        diff = make_dict(key, dict1, dict2, diff)
     # Iterate over keys in second dict
     for key in dict2:
         if key not in dict1:
             diff[key] = {"status": "added", "new_value": dict2[key]}
 
+    return diff
+
+
+def make_dict(key, dict1, dict2, diff):
+    """Make a dictionary with differences between two values of dicts."""
+    if key not in dict2:
+        diff[key] = {"status": "removed", "old_value": dict1[key]}
+    elif dict1[key] != dict2[key]:
+        if isinstance(dict1[key], dict) and isinstance(dict2[key], dict):
+            # Recursively compare nested dictionaries
+            nested_diff = get_diff(dict1[key], dict2[key])
+            if nested_diff:
+                diff[key] = nested_diff
+        else:
+            diff[key] = {"status": "modified", "old_value": dict1[key],
+                         "new_value": dict2[key]}
+    else:
+        diff[key] = {"status": "not changed", "data": dict1[key]}
     return diff
 
 
