@@ -6,27 +6,31 @@ def stylish(diff, depth=1):
     for i in sorted(diff):
         gap = ('    ' * depth)
         gap2 = gap[2:]
-        if isinstance(diff[i], dict) and "status" not in diff[i]:
-            ans += f"{gap}{i}: {{\n"
-            ans += stringify(stylish(diff[i], depth + 1), depth)
-            ans += f"\n{gap}}}\n"
-        elif diff[i]['status'] == 'added':
-            ans += auto_space(gap2, i, stringify(diff[i]['new_value'], depth),
-                              "+ ")
-        elif diff[i]['status'] == 'removed':
-            ans += auto_space(gap2, i, stringify(diff[i]['old_value'], depth),
-                              "- ")
-        elif diff[i]['status'] == 'modified':
-            ans += auto_space(gap2, i, stringify(diff[i]['old_value'], depth),
-                              "- ")
-            ans += auto_space(gap2, i, stringify(diff[i]['new_value'], depth),
-                              "+ ")
-        elif diff[i]['status'] == 'not changed':
-            ans += auto_space(gap, i, stringify(diff[i]['data'], depth))
-    if ans[-1:] == "\n":
-        ans = ans[:-1]
+        ans = status_analise(diff, i, gap, gap2, ans, depth)
+    ans = ans.rstrip("\n")
     if depth == 1:
         return "{\n" + ans + "\n}"
+    return ans
+
+
+def status_analise(diff, i, gap, gap2, ans, depth):
+    if isinstance(diff[i], dict) and "status" not in diff[i]:
+        ans += f"{gap}{i}: {{\n"
+        ans += stringify(stylish(diff[i], depth + 1), depth)
+        ans += f"\n{gap}}}\n"
+    elif diff[i]['status'] == 'added':
+        ans += auto_space(gap2, i, stringify(diff[i]['new_value'], depth),
+                          "+ ")
+    elif diff[i]['status'] == 'removed':
+        ans += auto_space(gap2, i, stringify(diff[i]['old_value'], depth),
+                          "- ")
+    elif diff[i]['status'] == 'modified':
+        ans += auto_space(gap2, i, stringify(diff[i]['old_value'], depth),
+                          "- ")
+        ans += auto_space(gap2, i, stringify(diff[i]['new_value'], depth),
+                          "+ ")
+    elif diff[i]['status'] == 'not changed':
+        ans += auto_space(gap, i, stringify(diff[i]['data'], depth))
     return ans
 
 
