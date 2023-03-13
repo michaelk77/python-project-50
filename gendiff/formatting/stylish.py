@@ -31,9 +31,8 @@ def stylish(diff, depth=1):
 
 
 def auto_space(gap, i, value, sign=""):
-    if value != "":
-        return f"{gap}{sign}{i}: {value}\n"
-    return f"{gap}{sign}{i}:\n"
+    return f"{gap}{sign}{i}: {value}\n"
+
 
 
 def stringify(raw_value, depth):
