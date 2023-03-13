@@ -3,38 +3,42 @@ import json
 
 def plain(diff, path=""):
     """formatting diff to plain style string"""
-    formatter = ""
+    ans = ""
     if isinstance(diff, dict):
         for i in sorted(diff):
             if isinstance(diff[i], dict) and "status" not in diff[i]:
-                if path:
-                    formatter += plain(diff[i], path + "." + i) + "\n"
-                else:
-                    formatter += plain(diff[i], i) + "\n"
+                ans += plain(diff[i], path_ans(path, i, ".")) + "\n"
             else:
-                formatter = status_analise(diff, i, path, formatter)
+                ans = status_analise(diff, i, path, ans)
 
-    return formatter.strip()
+    return ans.strip()
 
 
-def status_analise(diff, i, path, formatter):
+def path_ans(path, i, dot):
+    """Return path with dot or not"""
+    if path:
+        return f"{path}{dot}{i}"
+    return i
+
+
+def status_analise(diff, i, path, ans):
     """Analise's status of diff and return string"""
     if isinstance(diff[i], dict):
         status = diff[i]['status']
         dot = "." if path else ""
         if status == "removed":
-            formatter += f"Property '{path}{dot}{i}' was removed\n"
+            ans += f"Property '{path}{dot}{i}' was removed\n"
         elif status == "added":
-            formatter += f"Property '{path}{dot}{i}'" \
-                         f" was added with value: "
-            formatter += f"{stringify(diff[i]['new_value'])}\n"
+            ans += f"Property '{path}{dot}{i}'" \
+                   f" was added with value: "
+            ans += f"{stringify(diff[i]['new_value'])}\n"
         elif status == "deleted":
-            formatter += f"Property '{path}{dot}{i}' was removed\n"
+            ans += f"Property '{path}{dot}{i}' was removed\n"
         elif status == "modified":
-            formatter += f"Property '{path}{dot}{i}' was updated. "
-            formatter += f"From {stringify(diff[i]['old_value'])} " \
-                         f"to {stringify(diff[i]['new_value'])}\n"
-    return formatter
+            ans += f"Property '{path}{dot}{i}' was updated. "
+            ans += f"From {stringify(diff[i]['old_value'])} " \
+                   f"to {stringify(diff[i]['new_value'])}\n"
+    return ans
 
 
 def stringify(raw_value):
