@@ -34,7 +34,6 @@ def auto_space(gap, i, value, sign=""):
     return f"{gap}{sign}{i}: {value}\n"
 
 
-
 def stringify(raw_value, depth):
     if isinstance(raw_value, dict):
         normalized = "{\n"
