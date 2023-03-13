@@ -5,10 +5,8 @@
 <a href="https://codeclimate.com/github/michaelk77/python-project-50/maintainability"><img src="https://api.codeclimate.com/v1/badges/8d142986beee20c9d2d0/maintainability" /></a>
 <a href="https://codeclimate.com/github/michaelk77/python-project-50/test_coverage"><img src="https://api.codeclimate.com/v1/badges/8d142986beee20c9d2d0/test_coverage" /></a>
 
-
+help output
 [![asciicast](https://asciinema.org/a/i5Rfq6ngVLGSeiBOYBvwVNXGC.svg)](https://asciinema.org/a/i5Rfq6ngVLGSeiBOYBvwVNXGC)
-
-[![asciicast](https://asciinema.org/a/fXZbN3RnO6mygy4SvAzWd3Ptk.svg)](https://asciinema.org/a/fXZbN3RnO6mygy4SvAzWd3Ptk)
 
 stylish standart output
 [![asciicast](https://asciinema.org/a/EhxiMiu4eieIh5J5SugBGY7K4.svg)](https://asciinema.org/a/EhxiMiu4eieIh5J5SugBGY7K4)
