@@ -1,11 +1,14 @@
 [tool.poetry]
 name = "hexlet-code"
 version = "0.1.0"
-description = ""
+description = "Command line utility compares two .json or .yaml/yml files and gets a difference between them. Three types of format output are available."
 authors = ["michael <catcat2005@inbox.ru>"]
 readme = "README.md"
-packages = [
-    { include = "gendiff" },
+packages = [{ include = "gendiff" },]
+repository = "https://github.com/michaelk77/python-project-50"
+classifiers = [
+    "Programming Language :: Python :: 3.10",
+    "Operating System :: OS Independent",
 ]
 
 [tool.poetry.dependencies]
@@ -13,9 +16,6 @@ python = "^3.10"
 pytest = "^7.2.2"
 pytest-cov = "^4.0.0"
 pyyaml = "^6.0"
-
-
-
 
 [tool.poetry.group.dev.dependencies]
 flake8 = "^6.0.0"
